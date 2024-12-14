@@ -1,19 +1,22 @@
 from datetime import datetime
 
+
 class CarRental:
     def __init__(self, stock=0):
-        self.stock = stock  # Initialize the stock of cars
+        self.stock = stock  # Number of cars in stock
 
     def display_cars(self):
+        """Display the number of available cars."""
         print(f"We have {self.stock} cars available for rent.")
         return self.stock
 
     def hourly_rent(self, car_num):
+        """Rent cars on an hourly basis."""
         if car_num <= 0:
             print("Number of cars should be greater than zero.")
             return None
         elif car_num > self.stock:
-            print(f"We are sorry, currently we have only {self.stock} cars available.")
+            print(f"Sorry, we have only {self.stock} cars available.")
             return None
         else:
             now = datetime.now()
@@ -22,11 +25,12 @@ class CarRental:
             return now
 
     def daily_rent(self, car_num):
+        """Rent cars on a daily basis."""
         if car_num <= 0:
             print("Number of cars should be greater than zero.")
             return None
         elif car_num > self.stock:
-            print(f"We are sorry, currently we have only {self.stock} cars available.")
+            print(f"Sorry, we have only {self.stock} cars available.")
             return None
         else:
             now = datetime.now()
@@ -35,11 +39,12 @@ class CarRental:
             return now
 
     def weekly_rent(self, car_num):
+        """Rent cars on a weekly basis."""
         if car_num <= 0:
             print("Number of cars should be greater than zero.")
             return None
         elif car_num > self.stock:
-            print(f"We are sorry, currently we have only {self.stock} cars available.")
+            print(f"Sorry, we have only {self.stock} cars available.")
             return None
         else:
             now = datetime.now()
@@ -48,11 +53,16 @@ class CarRental:
             return now
 
     def return_car(self, request):
+        """
+        Process returning cars and calculate the bill.
+
+        :param request: A tuple containing rent_time, rent_basis, and car_num
+        """
         rent_time, rent_basis, car_num = request
 
         if rent_time and rent_basis and car_num:
             now = datetime.now()
-            rent_period = (now - rent_time).total_seconds()
+            rent_period = (now - rent_time).total_seconds()  # Calculate rental duration in seconds
 
             bill = 0
             if rent_basis == 1:  # Hourly
