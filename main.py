@@ -1,7 +1,11 @@
 from carRent import CarRental
+from customer import Customer
+
 
 def car_rental_interface():
     rental_service = CarRental(stock=10)  # Initializing with 10 cars
+    customer = Customer()  # Initialize a customer object
+
     while True:
         print("\nWelcome to the Car Rental Service!")
         print("1. Display available cars")
@@ -15,33 +19,33 @@ def car_rental_interface():
 
         if choice == 1:
             rental_service.display_cars()
-        elif choice == 2:
-            car_num = int(input("How many cars would you like to rent? "))
-            rental_service.hourly_rent(car_num)
-        elif choice == 3:
-            car_num = int(input("How many cars would you like to rent? "))
-            rental_service.daily_rent(car_num)
-        elif choice == 4:
-            car_num = int(input("How many cars would you like to rent? "))
-            rental_service.weekly_rent(car_num)
+        elif choice in [2, 3, 4]:
+            car_num = customer.request_cars()  # Customer requests cars
+            if car_num:
+                if choice == 2:  # Hourly rental
+                    customer.rent_time = rental_service.hourly_rent(car_num)
+                    customer.rent_basis = 1
+                elif choice == 3:  # Daily rental
+                    customer.rent_time = rental_service.daily_rent(car_num)
+                    customer.rent_basis = 2
+                elif choice == 4:  # Weekly rental
+                    customer.rent_time = rental_service.weekly_rent(car_num)
+                    customer.rent_basis = 3
         elif choice == 5:
-            try:
-                rent_time = datetime.strptime(
-                    input("Enter the rent start time (YYYY-MM-DD HH:MM:SS): "),
-                    "%Y-%m-%d %H:%M:%S",
-                )
-                rent_basis = int(
-                    input("Enter the rent basis (1 for hourly, 2 for daily, 3 for weekly): ")
-                )
-                car_num = int(input("How many cars are you returning? "))
-                rental_service.return_car((rent_time, rent_basis, car_num))
-            except ValueError:
-                print("Invalid input. Please try again.")
+            rent_details = customer.return_cars()
+            if rent_details:
+                bill = rental_service.return_car(rent_details)
+                customer.cars = 0  # Reset customer details after return
+                customer.rent_basis = 0
+                customer.rent_time = None
+            else:
+                print("You did not rent any cars.")
         elif choice == 6:
             print("Thank you for using the Car Rental Service!")
             break
         else:
             print("Invalid choice. Please try again.")
+
 
 if __name__ == "__main__":
     car_rental_interface()
